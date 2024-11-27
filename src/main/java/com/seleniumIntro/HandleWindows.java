@@ -24,10 +24,18 @@ public class HandleWindows {
         String childId = iterator.next();
         driver.switchTo().window(childId);
 
-        String messageEmail = driver.findElement(By.cssSelector(".im-para.red")).getText();
-        String[] arr =messageEmail.split(" ");
-        System.out.println(arr[4]);
+        String messageWithEmail = driver.findElement(By.cssSelector(".im-para.red")).getText();
+        String email = messageWithEmail.split("at")[1].trim().split(" ")[0];
+        System.out.println(email);
 
+        driver.switchTo().window(parentId);
+        WebElement inputUsername = driver.findElement(By.id("username"));
+        inputUsername.sendKeys(email);
+
+        Thread.sleep(1000);
+        driver.switchTo().window(childId);
+        driver.close();
+        driver.switchTo().window(parentId);
         Thread.sleep(2000);
         driver.close();
     }
