@@ -13,8 +13,11 @@ public class Frames {
         WebDriver driver = new ChromeDriver();
         driver.get("https://jqueryui.com/droppable/");
 
+        System.out.println("iframe count = " + driver.findElements(By.tagName("iframe")).size());
+
         // to get element form frame you need to switch to it
         driver.switchTo().frame(driver.findElement(By.className("demo-frame")));
+//        driver.switchTo().frame(0); // change frame by index (not reliable)
 
         String pText = driver.findElement(By.cssSelector("#draggable p")).getText();
         System.out.println(pText);
@@ -26,6 +29,8 @@ public class Frames {
         WebElement droppable = driver.findElement(By.id("droppable"));
 
         action.dragAndDrop(draggable, droppable).build().perform();
+
+        driver.switchTo().defaultContent(); // switch back to main frame
 
         Thread.sleep(1000);
         driver.close();
