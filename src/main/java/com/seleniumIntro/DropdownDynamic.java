@@ -11,6 +11,23 @@ public class DropdownDynamic {
     public static void main(String[] args) throws InterruptedException {
         WebDriver driver = new ChromeDriver();
 
+        /*
+         // Locate the dropdown
+            WebElement dropdown = driver.findElement(By.id("dropdownElementId"));
+
+            // Create Select instance
+            Select select = new Select(dropdown);
+
+            // Select an option by visible text
+            select.selectByVisibleText("Option Text");
+            select.selectByValue("optionValue");
+            select.selectByIndex(2); // Index starts from 0
+            select.selectByVisibleText("Option Text");
+
+
+
+         */
+
         driver.get("https://rahulshettyacademy.com/dropdownsPractise");
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(500));
 
