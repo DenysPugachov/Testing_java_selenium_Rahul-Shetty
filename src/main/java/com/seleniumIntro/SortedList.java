@@ -5,60 +5,45 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.support.ui.Select;
 import org.testng.Assert;
-import org.testng.annotations.Test;
 
 
-import java.time.Duration;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Stream;
+
 
 public class SortedList {
-    public static void main(String[] args) throws InterruptedException {
-        String url = "https://rahulshettyacademy.com/seleniumPractise/#/offers";
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("headless");
-        WebDriver driver = new ChromeDriver(options);
-        driver.get(url);
+    public static class ConsoleColors {
+        public static final String RED = "\033[31m";
+        public static final String GREEN = "\033[32m";
+        public static final String YELLOW = "\033[33m";
+        public static final String BLUE = "\033[34m";
+        public static final String RESET = "\033[0m";
+    }
+    private static final String URL = "https://rahulshettyacademy.com/seleniumPractise/#/offers";
 
-        // Select Number items on a table
+    public static void main(String[] args) throws InterruptedException {
+        testDesSort(getWebDriver());
+        testAscSort(getWebDriver());
+    }
+
+
+    private static WebDriver getWebDriver() {
+//        ChromeOptions options = new ChromeOptions();
+        FirefoxOptions options = new FirefoxOptions();
+        options.addArguments("--headless");
+        return new FirefoxDriver(options);
+    }
+
+    private static void selectItemsNumber(Integer number, WebDriver driver){
         WebElement dropdown = driver.findElement(By.id("page-menu"));
         Select select = new Select(dropdown);
-        select.selectByValue("5");
-
-        WebElement columnHeader = driver.findElement(By.xpath("//thead/tr/th[1]"));
-
-        // Sort items in column A->Z
-//        columnHeader.click();
-        List<String> listAfterSortAscending = getListItems(driver);
-
-        // Sort items in column Z->A
-        columnHeader.click();
-        columnHeader.click();
-        List<String> listAfterSortDescending = getListItems(driver);
-
-         List<String> expectedSortedListAscending = listAfterSortAscending
-                .stream()
-                .sorted()
-                .toList();
-
-        List<String> expectedSortedListDescending = listAfterSortDescending
-                .stream()
-                .sorted(Comparator.reverseOrder())
-                .toList();
-
-        // TESTS
-        testDescendingSort(expectedSortedListDescending, listAfterSortDescending);
-        testAscendingSort(expectedSortedListAscending, listAfterSortAscending);
-
-        driver.quit();
+        select.selectByValue(number.toString());
     }
 
-    private static void printList(String nameOfList, List<String> list) {
-        System.out.println(nameOfList + ": " + list);
-    }
 
     private static List<String> getListItems(WebDriver driver) {
         return driver.findElements(By.xpath("//tbody/tr/td[1]"))
@@ -67,15 +52,55 @@ public class SortedList {
                 .toList();
     }
 
-    @Test
-    public static void testAscendingSort(List<String> expectedSortedListAscending, List<String> listAfterSortAscending) {
-        Assert.assertEquals(expectedSortedListAscending, listAfterSortAscending, "Test table sorting Ascending order has fail.");
-        System.out.println("Ascending sort test pass");
+    public static void testListsEquals(String testName, List<String> expectedList, List<String> actualList) {
+        try {
+            Assert.assertEquals(expectedList, actualList, ConsoleColors.RED + testName + " test has fail: " + ConsoleColors.RESET);
+            System.out.println(ConsoleColors.GREEN + testName + " test has passed." + ConsoleColors.RESET);
+        } catch (AssertionError err) {
+            System.out.println(err.getMessage());
+            System.out.println("expect: " + expectedList);
+            System.out.println("actual: " + actualList);
+        }
     }
 
-    @Test
-    public static void testDescendingSort(List<String> expectedSortedListDescending, List<String> listAfterSortDescending) {
-        Assert.assertEquals(expectedSortedListDescending, listAfterSortDescending, "Test table sorting Descending order has fail.");
-        System.out.println("Descending sort test pass");
+    public static void testListsNotEquals(String testName, List<String> expectedList, List<String> actualList) {
+        try {
+            Assert.assertNotEquals(expectedList, actualList, ConsoleColors.RED + testName + " test has fail: " + ConsoleColors.RESET);
+            System.out.println(ConsoleColors.GREEN + testName + " test has passed." + ConsoleColors.RESET);
+        } catch (AssertionError err) {
+            System.out.println(err.getMessage());
+            System.out.println("expect: " + expectedList);
+            System.out.println("actual: " + actualList);
+        }
+
     }
+
+    private static void testAscSort(WebDriver driver) {
+        driver.get(URL);
+        selectItemsNumber(10, driver);
+        WebElement columnHeader = driver.findElement(By.xpath("//thead/tr/th[1]"));
+        List<String> listBeforeSort = getListItems(driver);
+        columnHeader.click(); // sort A-Z
+        List<String> listAfterSortAscending = getListItems(driver);
+        List<String> listSortedAsc = listAfterSortAscending.stream().sorted().toList();
+        testListsEquals("Ascending sort", listAfterSortAscending, listSortedAsc);
+        testListsNotEquals("Ascending sort is changing list", listAfterSortAscending, listBeforeSort);
+        driver.quit();
+    }
+
+    private static void testDesSort(WebDriver driver) {
+        driver.get(URL);
+        selectItemsNumber(20, driver);
+        WebElement columnHeader = driver.findElement(By.xpath("//thead/tr/th[1]"));
+        columnHeader.click(); // sort A->Z
+        List<String> listBeforeSort = getListItems(driver);
+        columnHeader.click(); // sort Z->A
+        List<String> listAfterSortDescending = getListItems(driver);
+        List<String> expectedListSortedDesc = listAfterSortDescending.stream().sorted(Comparator.reverseOrder()).toList();
+        testListsEquals("Descending sort", listAfterSortDescending, expectedListSortedDesc);
+        testListsNotEquals("Descending sort is changing list", listAfterSortDescending, listBeforeSort);
+        driver.quit();
+    }
+
 }
+

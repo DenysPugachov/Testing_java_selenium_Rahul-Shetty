@@ -35,6 +35,7 @@ public class SortedList2 {
     @Test
     public void testAscendingSort() {
         WebElement columnHeader = driver.findElement(By.xpath("//thead/tr/th[1]"));
+        columnHeader.click();
         List<String> listAfterSortAscending = getListItems(driver);
 
         // Expected sorted list
