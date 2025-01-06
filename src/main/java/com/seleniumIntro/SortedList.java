@@ -32,20 +32,19 @@ public class SortedList {
 
 
     private static WebDriver getWebDriver() {
-//        ChromeOptions options = new ChromeOptions();
         FirefoxOptions options = new FirefoxOptions();
         options.addArguments("--headless");
         return new FirefoxDriver(options);
     }
 
-    private static void selectItemsNumber(Integer number, WebDriver driver){
+    public static void selectItemsNumber(Integer number, WebDriver driver){
         WebElement dropdown = driver.findElement(By.id("page-menu"));
         Select select = new Select(dropdown);
         select.selectByValue(number.toString());
     }
 
 
-    private static List<String> getListItems(WebDriver driver) {
+    public static List<String> getListItems(WebDriver driver) {
         return driver.findElements(By.xpath("//tbody/tr/td[1]"))
                 .stream()
                 .map(WebElement::getText)
