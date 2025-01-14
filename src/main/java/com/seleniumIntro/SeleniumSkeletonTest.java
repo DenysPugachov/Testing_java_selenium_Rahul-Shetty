@@ -21,7 +21,7 @@ public class SeleniumSkeletonTest {
      */
     @BeforeClass
     public void setupClass() {
-        System.setProperty("webdriver.chrome.driver", "path/to/chromedriver"); // Set your chromedriver path
+//        System.setProperty("webdriver.chrome.driver", "path/to/chromedriver"); // Set your chromedriver path
     }
 
     /**
@@ -31,7 +31,7 @@ public class SeleniumSkeletonTest {
     @BeforeMethod
     public void setupMethod() {
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--start-maximized");
+//        options.addArguments("--headless");
         driver = new ChromeDriver(options);
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
     }
@@ -43,7 +43,7 @@ public class SeleniumSkeletonTest {
     @Test
     public void testExample() {
         // Navigate to the target website
-        driver.get("https://example.com");
+        driver.get("https://google.com");
 
         // Example test logic
         WebElement searchBox = driver.findElement(By.name("q"));
