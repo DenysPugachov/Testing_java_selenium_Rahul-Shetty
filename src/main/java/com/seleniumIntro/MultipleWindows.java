@@ -14,7 +14,6 @@ public class MultipleWindows {
     public static void main(String[] args) throws InterruptedException {
         WebDriver driver = Utils.initChromeDriver();
         driver.get("https://rahulshettyacademy.com/angularpractice/");
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
 
         driver.switchTo().newWindow(WindowType.TAB);
         Set<String> windowHandler = driver.getWindowHandles();
