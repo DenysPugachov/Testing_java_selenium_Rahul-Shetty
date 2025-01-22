@@ -26,16 +26,20 @@ public class MultipleWindows {
         driver.get("https://rahulshettyacademy.com/");
 
         List<WebElement> coursesTitles = driver.findElements(By.xpath("//a[contains(@href, 'https://courses.rahulshettyacademy.com/p/')]"));
+
         String firstCourseTitle = coursesTitles.get(1).getText();
+
+        System.out.println("firstCourseTitle height: " + coursesTitles.get(1).getRect().getDimension().getHeight());
+        System.out.println("firstCourseTitle width: " + coursesTitles.get(1).getRect().getDimension().getWidth());
         System.out.println(firstCourseTitle);
 
         driver.switchTo().window(parentWindowId);
 
-        List <WebElement> inputElems = driver.findElements(By.xpath("//input"));
-        inputElems.get(0).sendKeys(firstCourseTitle);
-
-
-
+        List<WebElement> inputElems = driver.findElements(By.xpath("//input"));
+        WebElement firstInput = inputElems.get(0);
+        System.out.println("Height: " + firstInput.getRect().getDimension().getHeight());
+        System.out.println("Width: " + firstInput.getRect().getDimension().getWidth());
+        firstInput.sendKeys(firstCourseTitle);
 
 
         Thread.sleep(5000);

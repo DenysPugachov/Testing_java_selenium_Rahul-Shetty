@@ -8,6 +8,7 @@ public class Utils {
 
     public static WebDriver initChromeDriver(boolean isHeadless) {
         ChromeOptions options = new ChromeOptions();
+        options.addArguments("--start-maximized");
         if (isHeadless) {
             options.addArguments("--headless");
         }
